@@ -33,6 +33,10 @@ module MissionControl::Jobs::Adapter
     false
   end
 
+  def supports_batches?
+    false
+  end
+
   # Returns an array with the list of recurring tasks. Each task is represented as a hash
   # with these attributes:
   #   {

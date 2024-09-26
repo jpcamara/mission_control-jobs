@@ -1,9 +1,9 @@
 GIT
-  remote: https://github.com/rails/solid_queue.git
-  revision: 8df600df2d22261cdce3e51e103c1cf58d4da391
-  branch: improve-recurring-tasks-config
+  remote: https://github.com/jpcamara/solid_queue
+  revision: 7d951b3af7810a7421da231d63cda64daf352c6f
+  branch: batch-poc
   specs:
-    solid_queue (0.8.2)
+    solid_queue (1.0.0.beta)
       activejob (>= 7.1)
       activerecord (>= 7.1)
       concurrent-ruby (>= 1.3.1)

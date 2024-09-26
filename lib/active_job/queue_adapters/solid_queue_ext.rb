@@ -1,6 +1,6 @@
 module ActiveJob::QueueAdapters::SolidQueueExt
   include MissionControl::Jobs::Adapter
-  include RecurringTasks, Workers
+  include RecurringTasks, Workers, Batches
 
   def queues
     queues = SolidQueue::Queue.all
@@ -169,7 +169,7 @@ module ActiveJob::QueueAdapters::SolidQueueExt
         attr_reader :jobs_relation
 
         delegate :queue_name, :limit_value, :limit_value_provided?, :offset_value, :job_class_name,
-          :default_page_size, :worker_id, :recurring_task_id, to: :jobs_relation
+          :default_page_size, :worker_id, :recurring_task_id, :batch_id, to: :jobs_relation
 
         def executions
           execution_class_by_status
@@ -199,6 +199,7 @@ module ActiveJob::QueueAdapters::SolidQueueExt
             # Follow polling order for scheduled executions, the rest by job_id, desc or asc
           when solid_queue_status.scheduled? then executions.ordered
           when recurring_task_id.present?    then executions.order(job_id: :desc)
+          when batch_id.present?            then executions
           else executions.order(job_id: :asc)
           end
         end
@@ -220,6 +221,8 @@ module ActiveJob::QueueAdapters::SolidQueueExt
         def execution_class_by_status
           if recurring_task_id.present?
             SolidQueue::RecurringExecution
+          elsif batch_id.present?
+            SolidQueue::JobBatch
           elsif solid_queue_status.present? && !solid_queue_status.finished?
             "SolidQueue::#{solid_queue_status.capitalize}Execution".safe_constantize
           else
