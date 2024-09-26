@@ -1,0 +1,9 @@
+<tr class="batch">
+  <td></td>
+  <td>
+    <%= link_to batch.id, application_batch_path(@application, batch.id) %>
+  </td>
+  <td>
+    <%= batch.jobs.count %>
+  </td>
+</tr>
